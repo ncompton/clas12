@@ -219,9 +219,9 @@ public class ContentModel {
             cameraXform2.setTx(cameraXform2.t.getX() - (0.01*event.getDeltaX()));  // -
             cameraXform2.setTy(cameraXform2.t.getY() + (0.01*event.getDeltaY()));  // -
         } else { // mouse wheel
-            double z = cameraPosition.getZ()-(event.getDeltaY()*0.2);
+            double z = cameraPosition.getZ()-(event.getDeltaY());//*0.2);
             z = Math.max(z,-10d*dimModel);
-            z = Math.min(z,0);
+            z = Math.min(z,10d*dimModel);
             cameraPosition.setZ(z);
         }
     };
