@@ -1,7 +1,5 @@
 package org.jlab.clas12.viewer;
 
-import com.javafx.experiments.jfx3dviewer.AutoScalingGroup;
-import com.javafx.experiments.jfx3dviewer.Xform;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -216,12 +214,12 @@ public class ContentModel {
     
     private final EventHandler<ScrollEvent> scrollEventHandler = event -> {
         if (event.getTouchCount() > 0) { // touch pad scroll
-            cameraXform2.setTx(cameraXform2.t.getX() - (0.01*event.getDeltaX()));  // -
-            cameraXform2.setTy(cameraXform2.t.getY() + (0.01*event.getDeltaY()));  // -
+            cameraXform2.setTx(cameraXform2.t.getX() - (event.getDeltaX()));  // -
+            cameraXform2.setTy(cameraXform2.t.getY() + (event.getDeltaY()));  // -
         } else { // mouse wheel
-            double z = cameraPosition.getZ()-(event.getDeltaY()*0.2);
+            double z = cameraPosition.getZ()-(event.getDeltaY());//*0.2);
             z = Math.max(z,-10d*dimModel);
-            z = Math.min(z,0);
+            z = Math.min(z,10d*dimModel);
             cameraPosition.setZ(z);
         }
     };
@@ -234,15 +232,24 @@ public class ContentModel {
         }
     };
     
+    private EventHandler<KeyEvent> keyEventHandler = event -> {
+        //if (event.getCharacter().matches("[0-9]")) {
+        	System.out.println("Hi");
+        //}
+    };
+    
+    
     private void setListeners(boolean addListeners){
         if(addListeners){
             subScene.addEventHandler(MouseEvent.ANY, mouseEventHandler);
             subScene.addEventHandler(ZoomEvent.ANY, zoomEventHandler);
             subScene.addEventHandler(ScrollEvent.ANY, scrollEventHandler);
+            subScene.addEventHandler(KeyEvent.ANY, keyEventHandler);
         } else {
             subScene.removeEventHandler(MouseEvent.ANY, mouseEventHandler);
             subScene.removeEventHandler(ZoomEvent.ANY, zoomEventHandler);
             subScene.removeEventHandler(ScrollEvent.ANY, scrollEventHandler);
+            subScene.removeEventHandler(KeyEvent.ANY, keyEventHandler);
         }
     }
     
