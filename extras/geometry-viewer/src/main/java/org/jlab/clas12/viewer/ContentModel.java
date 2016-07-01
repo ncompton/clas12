@@ -42,6 +42,10 @@ public class ContentModel {
     private double mousePosX, mousePosY;
     private double mouseOldX, mouseOldY;
     private double mouseDeltaX, mouseDeltaY;
+    private MeshView curmeshview = new MeshView();
+    private MeshView oldmeshview = new MeshView();
+    PhongMaterial currentmaterial = new PhongMaterial();
+	PhongMaterial oldmaterial = new PhongMaterial();
     private final double modifierFactor = 0.3;
     
     public ContentModel(double paneW, double paneH, double dimModel) {
@@ -180,12 +184,25 @@ public class ContentModel {
 
     private final EventHandler<MouseEvent> mouseEventHandler = event -> {
         double xFlip = -1.0, yFlip=1.0; // yUp
+        if(event.getEventType() == MouseEvent.MOUSE_MOVED) {
+        	PickResult res = event.getPickResult();
+            if (res.getIntersectedNode() instanceof MeshView){
+            	curmeshview = (MeshView)res.getIntersectedNode();
+            	if(!curmeshview.equals(oldmeshview))
+            	{
+            		oldmeshview.setMaterial(oldmaterial);
+            		oldmaterial = (PhongMaterial) curmeshview.materialProperty().getValue();
+            		oldmeshview = curmeshview;
+            		curmeshview.setMaterial(new PhongMaterial(Color.BLACK));
+            	}
+
+            }
+        }
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
             mousePosX = event.getSceneX();
             mousePosY = event.getSceneY();
             mouseOldX = event.getSceneX();
             mouseOldY = event.getSceneY();
-
         } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
             double modifier = event.isControlDown()?0.1:event.isShiftDown()?3.0:1.0;
 
@@ -232,24 +249,16 @@ public class ContentModel {
         }
     };
     
-    private EventHandler<KeyEvent> keyEventHandler = event -> {
-        //if (event.getCharacter().matches("[0-9]")) {
-        	System.out.println("Hi");
-        //}
-    };
-    
     
     private void setListeners(boolean addListeners){
         if(addListeners){
             subScene.addEventHandler(MouseEvent.ANY, mouseEventHandler);
             subScene.addEventHandler(ZoomEvent.ANY, zoomEventHandler);
             subScene.addEventHandler(ScrollEvent.ANY, scrollEventHandler);
-            subScene.addEventHandler(KeyEvent.ANY, keyEventHandler);
         } else {
             subScene.removeEventHandler(MouseEvent.ANY, mouseEventHandler);
             subScene.removeEventHandler(ZoomEvent.ANY, zoomEventHandler);
             subScene.removeEventHandler(ScrollEvent.ANY, scrollEventHandler);
-            subScene.removeEventHandler(KeyEvent.ANY, keyEventHandler);
         }
     }
     

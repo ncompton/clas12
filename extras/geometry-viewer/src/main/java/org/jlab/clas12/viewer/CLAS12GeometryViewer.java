@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
@@ -356,7 +357,10 @@ public class CLAS12GeometryViewer extends Application {
 				        if(w%2 ==0) wcolor = 0;
 				        rect.setMaterial(new PhongMaterial(Color.rgb(ucolor,vcolor,wcolor,alpha)));
 				        //store.addMesh(Integer.toString(u*10000+v*100+w), rect,4);
-				        	
+				        String PCALID = String.format("PCALID%06d", u*10000 + v*100 + w);
+				        //rect.setId(PCALID);
+				        Tooltip t = new Tooltip(PCALID);
+				        Tooltip.install(rect, t);
 				        this.root.getChildren().add(rect);
 				        /*
 				        for(Map.Entry<String,MeshView> item : store.getMap().entrySet()){
@@ -532,7 +536,10 @@ public class CLAS12GeometryViewer extends Application {
 						
 						Prism2Dto3DMesh pixel = new Prism2Dto3DMesh(6, x, y, z);
 				        MeshView rect = new MeshView(pixel.getMesh());
-				        
+				        String ECID = String.format("ECID%06d", u*10000 + v*100 + w);
+				        //rect.setId(ECID);
+				        Tooltip t = new Tooltip(ECID);
+				        Tooltip.install(rect, t);
 				        double alpha = 1.0;
 				        int ucolor = 255, vcolor = 255, wcolor = 255;
 				        if(u%2 ==0)
